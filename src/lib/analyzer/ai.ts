@@ -26,8 +26,8 @@ export async function generateAIAnalysis(resumeText: string, targetRole: string,
   try {
     if (process.env.GEMINI_API_KEY) {
       const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-      // We use gemini-1.5-flash as it's fast and suitable for this text task
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      // We use gemini-3.5-flash as it's fast and suitable for this text task
+      const model = genAI.getGenerativeModel({ model: "gemini-3.5-flash" });
 
       const prompt = `
         You are an expert ATS and technical recruiter. 

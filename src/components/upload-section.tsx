@@ -78,12 +78,23 @@ export function UploadSection({
     setIsAnalyzing(true);
     setError(null);
     
-    const formData = new FormData();
-    formData.append("resume", file);
-    formData.append("companyId", selectedCompany);
-    formData.append("roleId", selectedRole);
-
     try {
+      const base64String = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const result = reader.result as string;
+          resolve(result.split(',')[1]);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+
+      const formData = new FormData();
+      formData.append("resumeBase64", base64String);
+      formData.append("resumeType", file.type);
+      formData.append("companyId", selectedCompany);
+      formData.append("roleId", selectedRole);
+
       const result = await analyzeResume(formData);
       if (result.success && result.data) {
         onResult(result.data);

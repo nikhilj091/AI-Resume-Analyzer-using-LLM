@@ -1,36 +1,106 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Resume Analyzer
 
-## Getting Started
+A production-ready, full-stack AI-powered Resume Analyzer built with Next.js (App Router), Tailwind CSS, shadcn/ui, and the Google Gemini API.
 
-First, run the development server:
+## Project Overview
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+The AI Resume Analyzer allows job seekers to upload their resume (PDF or DOCX), choose a target role and company, and instantly receive:
+- Deterministic ATS Compatibility Score (0–100)
+- Formatting analysis (bullet points, length, required sections)
+- Keyword and technical skill matching using NLP and TF-IDF cosine similarity
+- AI-generated feedback including strengths, weaknesses, and actionable suggestions
+- Best-fit career recommendations
+
+This is designed as a single Next.js application, making it lightweight, scalable, and immediately deployable to Vercel.
+
+## Architecture & Tech Stack
+
+- **Framework**: Next.js 15 (React 19)
+- **Styling**: Tailwind CSS + shadcn/ui (Radix Primitives)
+- **Icons**: Lucide React
+- **Charts**: Recharts
+- **Animations**: Framer Motion
+- **Parsing**: `pdf-parse` for PDFs, `mammoth` for DOCX
+- **NLP**: `natural` for TF-IDF, `stopword` for text cleaning, `compromise` for NER/Skill extraction
+- **AI**: `@google/generative-ai` (Gemini API)
+
+## Folder Structure
+
+```
+resume-analyzer/
+├── src/
+│   ├── app/                 # Next.js App Router
+│   │   ├── actions/         # Server Actions (analyze.ts)
+│   │   ├── globals.css      # Global styles
+│   │   ├── layout.tsx       # Root layout & ThemeProvider
+│   │   └── page.tsx         # Main Landing Page
+│   ├── components/          # React Components
+│   │   ├── ui/              # shadcn/ui components
+│   │   ├── analyzer-app.tsx # Main App State Manager
+│   │   ├── dashboard.tsx    # Results Dashboard
+│   │   ├── theme-provider.tsx
+│   │   └── upload-section.tsx # Drag & Drop Upload
+│   └── lib/                 # Core Logic
+│       ├── analyzer/        # Scoring & AI Engine
+│       │   ├── ai.ts        # Gemini LLM Integration
+│       │   ├── nlp.ts       # TF-IDF & Keyword Extraction
+│       │   ├── parser.ts    # PDF/DOCX Parsing
+│       │   └── scoring.ts   # Deterministic ATS Scoring
+│       └── constants.ts     # Companies & Roles DB
+├── package.json
+├── tailwind.config.ts
+└── README.md
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Installation & Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Clone or Extract the Project**
+   Navigate to the project root directory.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. **Install Dependencies**
+   ```bash
+   npm install
+   ```
 
-## Learn More
+3. **Environment Variables**
+   Create a `.env.local` file in the root of the project and add your API Key:
+   ```env
+   GEMINI_API_KEY=your_gemini_api_key_here
+   ```
+   *Note: If you plan to extend this to OpenAI or Groq, you can add `OPENAI_API_KEY` or `GROQ_API_KEY` and update `src/lib/analyzer/ai.ts` accordingly.*
 
-To learn more about Next.js, take a look at the following resources:
+4. **Run Locally**
+   ```bash
+   npm run dev
+   ```
+   Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Testing
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+For this MVP, a standard React Testing Library and Jest configuration can be added. 
+To add it later, run:
+```bash
+npm install -D jest @testing-library/react @testing-library/jest-dom ts-jest
+```
 
-## Deploy on Vercel
+For now, the easiest way to test is to run `npm run lint` and `npm run build` to ensure type safety and build integrity.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deployment
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The application is completely ready to be deployed on **Vercel**:
+1. Push the repository to GitHub.
+2. Go to Vercel and import the repository.
+3. In the Vercel project settings, add the `GEMINI_API_KEY` environment variable.
+4. Click **Deploy**.
+
+*(Netlify is also supported via standard Next.js deployment steps).*
+
+## Future Scope
+
+- **OCR Integration**: For scanned PDF resumes using Tesseract.js.
+- **Multi-language Support**: Expanding NLP processing to support Spanish, French, etc.
+- **Authentication**: Using NextAuth for saving resume history.
+- **Recruiter Dashboard**: Allowing recruiters to upload job descriptions (JDs) and rank candidates.
+
+## License
+MIT License
